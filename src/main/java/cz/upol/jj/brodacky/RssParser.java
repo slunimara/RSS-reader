@@ -3,6 +3,8 @@ package main.java.cz.upol.jj.brodacky;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -12,6 +14,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class RssParser {
@@ -36,11 +39,13 @@ public class RssParser {
     }
 
     private Document getDocument() throws ParserConfigurationException, SAXException, IOException {
-        InputStream instream = new ByteArrayInputStream(xmlString.getBytes());
+        InputStream inStream = new ByteArrayInputStream(xmlString.getBytes());
+        Reader reader = new InputStreamReader(inStream);
+        InputSource inSource = new InputSource(reader);
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = factory.newDocumentBuilder();
-        return docBuilder.parse(instream);
+        return docBuilder.parse(inSource);
     }
     
     private String getDocumentFirstTagText(Document document, String tagName) throws NullPointerException {

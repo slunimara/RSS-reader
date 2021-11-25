@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 public class Client {
 
     private Scanner scanner = new Scanner(System.in);
-    private RssDownloader downloader = new RssDownloader("https://servis.idnes.cz/rss.aspx?c=zpravodaj");
+    private RssDownloader downloader = new RssDownloader("https://www.irozhlas.cz/rss/irozhlas");
     private RssParser parser = new RssParser();
     private ArrayList<RssItem> items;
     private int PRINT_COUNT = 3;
@@ -50,11 +50,20 @@ public class Client {
 
         try {
             parser.setXmlString(downloader.download());
+        } catch (Exception e) {
+            System.out.println(System.lineSeparator() + e + System.lineSeparator());
+            throw new Exception();
+        }
+
+        try {
             items = parser.getItems();
         } catch (Exception e) {
-            System.out.println(System.lineSeparator());
-            System.out.println("Error! Cant find RSS feed.");
-            System.out.println(System.lineSeparator());
+            System.out.println(System.lineSeparator() + e + System.lineSeparator());
+            throw new Exception();
+        }
+
+        if(items.isEmpty()){
+            System.out.println(System.lineSeparator() + "This feed does not contains any item." + System.lineSeparator());
             throw new Exception();
         }
 
