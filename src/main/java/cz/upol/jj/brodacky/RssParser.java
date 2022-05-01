@@ -1,106 +1,87 @@
 package main.java.cz.upol.jj.brodacky;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.ArrayList;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 public class RssParser {
-    private String xmlString;
+
+    private Document document;
+    
+    private final String[] TAGS_CHANNEL = {"title", "link", "description", "language", "copyright", "pubDate"};
+    private final String[] TAGS_ITEM = {"title", "link", "description", "author", "pubDate"};
+    private final String TAG_ITEM = "item";
     
     public RssParser() {
         super();
-        this.xmlString = "";
+        this.document = null;
     }
 
-    public RssParser(String xmlString) {
-        super();
-        this.xmlString = xmlString;
+    public Document getDocument() {
+        return document;
     }
 
-    public String getXmlString() {
-        return xmlString;
-    }
-
-    public void setXmlString(String xmlString) {
-        this.xmlString = xmlString;
-    }
-
-    private Document getDocument() throws ParserConfigurationException, SAXException, IOException {
-        InputStream inStream = new ByteArrayInputStream(xmlString.getBytes());
-        Reader reader = new InputStreamReader(inStream);
-        InputSource inSource = new InputSource(reader);
-
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder = factory.newDocumentBuilder();
-        return docBuilder.parse(inSource);
+    public void setDocument(Document document) {
+        this.document = document;
     }
     
-    private String getDocumentFirstTagText(Document document, String tagName) throws NullPointerException {
-        try {
-            return document.getElementsByTagName(tagName).item(0).getTextContent();
-        } catch (NullPointerException e) {
-            throw new NullPointerException();
-        } 
-    }
+    public RssChannel getChannelInfo() {
+        if (document == null)
+            return null;
 
-    private String getElementFirstTagText(Element element, String tagName) throws NullPointerException {
-        try {
-            return element.getElementsByTagName(tagName).item(0).getTextContent();
-        } catch (NullPointerException e) {
-            throw new NullPointerException();
-        } 
-    }
+        String[] args = new String[6];
 
-    public RssChannel getChannelInfo() throws Exception {
-        Document document = getDocument();
-
-        ArrayList<String> args = new ArrayList<>();
-        String[] keys = {"title", "link", "description", "language", "copyright", "pubDate"};
-        for (String key : keys) {
-            try {
-                args.add(getDocumentFirstTagText(document, key));  
-            } catch (NullPointerException e) {
-                args.add("");
-            }
+        for (int j = 0; j < args.length; j++) {
+            args[j] = getFirstElementText(document, TAGS_CHANNEL[j]);
         }
 
-        return new RssChannel(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5));
+        return new RssChannel(args[0], args[1], args[2], args[3], args[4], args[5]);
     }
 
-    public ArrayList<RssItem> getItems() throws Exception {
-        ArrayList<RssItem> itemList = new ArrayList<>();
-        Document document = getDocument();
+    public ArrayList<RssItem> getItems() {
+        if (document == null)
+            return null;
 
-        NodeList items = document.getElementsByTagName("item");
-        for(int i = 0; i < items.getLength(); i++){
-            Element item = (Element) items.item(i);
+        ArrayList<RssItem> items = new ArrayList<>();
 
-            ArrayList<String> args = new ArrayList<>();
-            String[] keys = new String[]{"title", "link", "description", "author", "pubDate"};
-            for (String key : keys) {
-                try {
-                    args.add(getElementFirstTagText(item, key)); 
-                } catch (NullPointerException e) {
-                    args.add("");
-                }
-            }
-            
-            itemList.add(new RssItem(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4)));
+        NodeList itemElements = document.getElementsByTagName(TAG_ITEM);
+        for(int i = 0; i < itemElements.getLength(); i++){
+            RssItem item = getItemAttributes((Element) itemElements.item(i));
+
+            items.add(item);
         }
 
-        return itemList;
+        return items;
+    }
+
+    private String getFirstElementText(Document document, String tagName) {
+        Node element = document.getElementsByTagName(tagName).item(0);
+
+        if (element != null) 
+            return element.getTextContent();
+
+        return "";
+    }
+
+    private String getFirstElementText(Element parent, String tagName) {
+        Node element = parent.getElementsByTagName(tagName).item(0);
+
+        if (element != null) 
+            return element.getTextContent();
+
+        return "";
+    }
+
+    private RssItem getItemAttributes(Element item) {
+        String[] args = new String[5];
+
+        for (int j = 0; j < args.length; j++) {
+            args[j] = getFirstElementText(item, TAGS_ITEM[j]);
+        }
+        
+        return new RssItem(args[0], args[1], args[2], args[3], args[4]);
     }
 }

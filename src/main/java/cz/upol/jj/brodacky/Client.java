@@ -2,17 +2,27 @@ package main.java.cz.upol.jj.brodacky;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
 public class Client {
 
-    private Scanner scanner = new Scanner(System.in);
-    private RssDownloader downloader = new RssDownloader("https://www.irozhlas.cz/rss/irozhlas");
-    private RssParser parser = new RssParser();
-    private ArrayList<RssItem> items;
-    private int PRINT_COUNT = 3;
+    public static void main(String[] args) {
+        Client client = new Client();
+        client.start();
+    }
+
+    private final String exampleUrl = "https://www.irozhlas.cz/rss/irozhlas";
+    private RssReader reader = new RssReader(exampleUrl);
+    private List<RssItem> items;
+    private int printCount = 3;
+    private Scanner scanner;
     
+    public Client() {
+        this.scanner = new Scanner(System.in);
+    }
+
     public void start() {
         printLine();
         System.out.println("---        Welcome in RSS reader        ---");
@@ -46,21 +56,16 @@ public class Client {
     public void feeds() throws Exception {
         printLine();
         System.out.println("---                Feeds                ---");
-        System.out.println("Current RSS feed is: " + downloader.getURL());
+        System.out.println("Current RSS feed is: " + reader.getUrl());
 
         try {
-            parser.setXmlString(downloader.download());
+            reader.downloadFeed();
         } catch (Exception e) {
             System.out.println(System.lineSeparator() + e + System.lineSeparator());
             throw new Exception();
         }
 
-        try {
-            items = parser.getItems();
-        } catch (Exception e) {
-            System.out.println(System.lineSeparator() + e + System.lineSeparator());
-            throw new Exception();
-        }
+        items = reader.getItems();
 
         if(items.isEmpty()){
             System.out.println(System.lineSeparator() + "This feed does not contains any item." + System.lineSeparator());
@@ -166,16 +171,12 @@ public class Client {
     }
 
     public void printChannel() {
-        try {
-            System.out.println(parser.getChannelInfo().toString());
-        } catch (Exception e) {
-            System.out.println("Error has eccurred! #01");
-        }
+        System.out.println(reader.getChannel().toString());
     }
 
     public void printItems() {
         int indexStart = 0;
-        int indexEnd = PRINT_COUNT;
+        int indexEnd = printCount;
 
         while(true){
             for (int i = indexStart; i < indexEnd && i < items.size(); i++) {
@@ -183,7 +184,7 @@ public class Client {
             }
 
             indexStart = indexEnd;
-            indexEnd += PRINT_COUNT;
+            indexEnd += printCount;
 
             if(indexEnd >= items.size()){
                 break;
@@ -225,8 +226,8 @@ public class Client {
     }
 
     public void printSettings() {
-        System.out.println("Current RSS feed is: " + downloader.getURL());
-        System.out.println("PRINT_COUNT is set to: " + PRINT_COUNT);
+        System.out.println("Current RSS feed is: " + reader.getUrl());
+        System.out.println("PRINT_COUNT is set to: " + printCount);
         System.out.println(System.lineSeparator());
     }
 
@@ -301,6 +302,8 @@ public class Client {
         System.out.println("--- This app was made by Marek Brodacký ---");
         System.out.println("---    Thank you for using this app.    ---");
         printLine();
+
+        scanner.close();
     }
 
     public void setPRINT_COUNT() {
@@ -308,7 +311,7 @@ public class Client {
         try {
             int input = scanner.nextInt();
             if(0 < input){
-                PRINT_COUNT = input;
+                printCount = input;
             }
             System.out.println(System.lineSeparator());
         } catch (InputMismatchException e) {
@@ -320,7 +323,7 @@ public class Client {
         System.out.print("Enter valid XML feed URL (eg. https://servis.idnes.cz/rss.aspx?c=zpravodaj) or type number (0) for default choise: ");
         String input = scanner.next();
         if(!input.equals("0")){
-            downloader.setURL(input);
+            reader.setUrl(input);
         } 
         System.out.println(System.lineSeparator());
     }

@@ -7,31 +7,18 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 
 public class RssDownloader {
-    private String URL = "";
-
-    public RssDownloader(String URL) {
-        super();
-        this.URL = URL;
-    }
-
-    public String getURL() {
-        return URL;
-    }
-
-    public void setURL(String uRL) {
-        URL = uRL;
-    }
-
-    public String download() throws Exception{
+    public String download(String url) throws Exception{
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-              .uri(URI.create(URL))
+              .uri(URI.create(url))
               .build();
+              
         try {
             HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+
             return response.body();
         } catch (Exception e) {
-            throw new Exception("Error while downloading feed!");
+            throw new Exception("Error while downloading feed!", e);
         }
     }
 }
