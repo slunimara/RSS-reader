@@ -33,7 +33,6 @@ public class RssParser {
             return null;
 
         String[] args = new String[6];
-
         for (int j = 0; j < args.length; j++) {
             args[j] = getFirstElementText(document, TAGS_CHANNEL[j]);
         }
@@ -46,7 +45,6 @@ public class RssParser {
             return null;
 
         ArrayList<RssItem> items = new ArrayList<>();
-
         NodeList itemElements = document.getElementsByTagName(TAG_ITEM);
         for(int i = 0; i < itemElements.getLength(); i++){
             RssItem item = getItemAttributes((Element) itemElements.item(i));
@@ -59,7 +57,6 @@ public class RssParser {
 
     private String getFirstElementText(Document document, String tagName) {
         Node element = document.getElementsByTagName(tagName).item(0);
-
         if (element != null) 
             return element.getTextContent();
 
@@ -68,7 +65,6 @@ public class RssParser {
 
     private String getFirstElementText(Element parent, String tagName) {
         Node element = parent.getElementsByTagName(tagName).item(0);
-
         if (element != null) 
             return element.getTextContent();
 
@@ -77,7 +73,6 @@ public class RssParser {
 
     private RssItem getItemAttributes(Element item) {
         String[] args = new String[5];
-
         for (int j = 0; j < args.length; j++) {
             args[j] = getFirstElementText(item, TAGS_ITEM[j]);
         }
