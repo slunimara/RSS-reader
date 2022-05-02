@@ -1,6 +1,10 @@
 package main.java.cz.upol.jj.brodacky;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -40,7 +44,7 @@ public class RssParser {
         return new RssChannel(args[0], args[1], args[2], args[3], args[4], args[5]);
     }
 
-    public ArrayList<RssItem> getItems() {
+    public ArrayList<RssItem> getItems() throws ParseException {
         if (document == null)
             return null;
 
@@ -71,12 +75,23 @@ public class RssParser {
         return "";
     }
 
-    private RssItem getItemAttributes(Element item) {
+    private RssItem getItemAttributes(Element item) throws ParseException {
         String[] args = new String[5];
         for (int j = 0; j < args.length; j++) {
             args[j] = getFirstElementText(item, TAGS_ITEM[j]);
-        }
-        
-        return new RssItem(args[0], args[1], args[2], args[3], args[4]);
+        }  
+
+        return new RssItem(args[0], args[1], args[2], args[3], parseDate(args[4]));
+    }
+
+    private String parseDate(String s) throws ParseException {
+        String dFormat = "E, dd MMM yyyy HH:mm:ss Z";
+        SimpleDateFormat format = new SimpleDateFormat(dFormat, Locale.ENGLISH); 
+        Date date = format.parse(s);
+
+        SimpleDateFormat formatter = new SimpleDateFormat("E HH:mm:ss");
+        String formattedDate = formatter.format(date);
+        String cap = formattedDate.substring(0, 1).toUpperCase() + formattedDate.substring(1);
+        return cap;
     }
 }

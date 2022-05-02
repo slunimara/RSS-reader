@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ListView?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.BorderPane?>
+
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.Separator?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.cz.upol.jj.brodacky.ClientController">
+	<top>
+		<MenuBar>
+			<Menu text="File">
+				<MenuItem text="Exit" onAction="#exitAction"/>
+			</Menu>
+			<Menu text="Actions">
+				<MenuItem text="Set feed URL" onAction="#setFeedUrl"/>
+				<MenuItem text="Load new content" onAction="#loadNew"/>
+			</Menu>
+		</MenuBar>
+	</top>
+	<center>
+		<VBox spacing="10"> 
+			<VBox spacing="5"> 
+				<Text text="Feed:" fx:id="textFeed"/>
+				<ListView fx:id="listView"/>
+			</VBox>
+
+			<VBox fx:id="infoVBox"> 
+				<Text text="Title: " fx:id="textTitle"/>
+				<Text text="Date: " fx:id="textDate"/>
+				<Text text="Description: " fx:id="textDescription"/>
+
+				<VBox.margin>
+					<Insets>
+						<left>5</left>
+						<right>5</right>
+					</Insets>
+				</VBox.margin>
+			</VBox>
+		</VBox>
+	</center>
+</BorderPane>
