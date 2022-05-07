@@ -34,7 +34,7 @@
 	<center>
 		<VBox spacing="10"> 
 			<VBox fx:id="feedVBox" spacing="5"> 
-				<Text text=" Feed:" fx:id="textFeed"/>
+				<Text text="" fx:id="textFeed"/>
 				<ListView fx:id="listView"/>
 			</VBox>
 

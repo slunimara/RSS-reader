@@ -22,11 +22,19 @@ import javafx.scene.web.WebView;
 
 public class ClientController {
 	
-	private final String exampleUrl = "https://www.irozhlas.cz/rss/irozhlas";
 	protected final static int WHITE_SPACE = 10; 
-	
+	public final static String[] feeds = new String[]{
+		"https://servis.idnes.cz/rss.aspx?c=zpravodaj", 
+		"https://servis.idnes.cz/rss.aspx?c=sport", 
+		"https://servis.idnes.cz/rss.aspx?c=olomouc", 
+		"https://www.irozhlas.cz/rss/irozhlas",
+		"https://www.irozhlas.cz/rss/irozhlas/section/zpravy-domov",
+		"https://www.irozhlas.cz/rss/irozhlas/section/veda-technologie",
+		"https://www.ceskenoviny.cz/sluzby/rss/zpravy.php",
+		"https://www.ceskenoviny.cz/sluzby/rss/svet.php"};
+
 	private Stage primaryStage;
-    private RssReader reader = new RssReader(exampleUrl);
+    private RssReader reader = new RssReader(feeds[0]);
 	private String url = "";
 
 	@FXML private Text textFeed;
@@ -87,6 +95,7 @@ public class ClientController {
 		try {
 			reader.downloadFeed();
 			updateList();
+			textFeed.setText(reader.getChannel().title());
 			updateInfo(0);
 		} catch (Exception e) {
 			Alert alert = new Alert(AlertType.ERROR);
