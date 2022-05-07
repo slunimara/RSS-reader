@@ -20,8 +20,8 @@ public class Client extends Application {
         controller.setPrimaryStage(stage);
         
 
-		stage.setTitle("RSS Reader,");
-		stage.setScene(new Scene(root, 500, 600));
+		stage.setTitle("RSS Reader");
+		stage.setScene(new Scene(root, 700, 600));
 		stage.show();
 	}
 }
