@@ -1,0 +1,13 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Users\\Marek\\Documents\\Projekty\\Java\\javafx-sdk-18\\lib\\javafx.base.jar",
+        "c:\\Users\\Marek\\Documents\\Projekty\\Java\\javafx-sdk-18\\lib\\javafx.controls.jar",
+        "c:\\Users\\Marek\\Documents\\Projekty\\Java\\javafx-sdk-18\\lib\\javafx.fxml.jar",
+        "c:\\Users\\Marek\\Documents\\Projekty\\Java\\javafx-sdk-18\\lib\\javafx.graphics.jar",
+        "c:\\Users\\Marek\\Documents\\Projekty\\Java\\javafx-sdk-18\\lib\\javafx.media.jar",
+        "c:\\Users\\Marek\\Documents\\Projekty\\Java\\javafx-sdk-18\\lib\\javafx.swing.jar",
+        "c:\\Users\\Marek\\Documents\\Projekty\\Java\\javafx-sdk-18\\lib\\javafx.web.jar",
+        "c:\\Users\\Marek\\Documents\\Projekty\\Java\\javafx-sdk-18\\lib\\javafx-swt.jar"
+    ]
+}

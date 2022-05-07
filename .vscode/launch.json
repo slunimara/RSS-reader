@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch ConsoleClient",
+            "request": "launch",
+            "mainClass": "main.java.cz.upol.jj.brodacky.ConsoleClient",
+            "projectName": "RSS-reader_ebfb9565"
+        },
+        {
+            "type": "java",
+            "name": "Launch Client",
+            "request": "launch",
+            "mainClass": "main.java.cz.upol.jj.brodacky.Client",
+            "projectName": "RSS-reader_ebfb9565",
+            "vmArgs": "--module-path C:/Users/Marek/Documents/Projekty/Java/javafx-sdk-18/lib --add-modules javafx.controls,javafx.fxml,javafx.web"
+        }
+    ]
+}

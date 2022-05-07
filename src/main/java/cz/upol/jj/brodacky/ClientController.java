@@ -1,6 +1,5 @@
 package main.java.cz.upol.jj.brodacky;
 
-import java.net.URL;
 import java.awt.datatransfer.StringSelection;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -10,16 +9,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -29,7 +23,7 @@ import javafx.scene.web.WebView;
 public class ClientController {
 	
 	private final String exampleUrl = "https://www.irozhlas.cz/rss/irozhlas";
-	private final int WHITE_SPACE = 10; 
+	protected final static int WHITE_SPACE = 10; 
 	
 	private Stage primaryStage;
     private RssReader reader = new RssReader(exampleUrl);
@@ -99,7 +93,6 @@ public class ClientController {
             alert.setTitle("Error");
             alert.setHeaderText(null);
             alert.setContentText("Error while loading new content.");
-
             alert.showAndWait();  
 		}	
 	}
@@ -109,7 +102,6 @@ public class ClientController {
 		alert.setTitle("Feed informations");
 		alert.setHeaderText(null);
 		alert.setContentText(reader.getChannel().toString());
-
 		alert.showAndWait();  
 	}
 
@@ -144,57 +136,8 @@ public class ClientController {
 	}
 
 	@FXML public void setFeedUrl() {
-		final Stage dialog = new Stage();
-		dialog.initModality(Modality.APPLICATION_MODAL);
-		dialog.initOwner(primaryStage);
-
-		VBox dialogVbox = modalsetFeedContent(dialog);
-
-		Scene dialogScene = new Scene(dialogVbox, 300, 150);
-		dialog.setScene(dialogScene);
-		dialog.setTitle("Set Feed URL");
-		dialog.show();
-	}
-
-	private VBox modalsetFeedContent(Stage dialog){
-		VBox dialogVbox = new VBox(WHITE_SPACE / 2);
-		dialogVbox.setPadding(new Insets(WHITE_SPACE));
-		dialogVbox.setAlignment(Pos.CENTER_LEFT);
-
-		Label label = new Label("Enter valid URL:");
-		label.setFont(Font.font("Verdana", FontWeight.MEDIUM, 14));
-		TextField urlField = new TextField();
-		Button save = new Button("Save");
-		Button close = new Button("Close");
-
-		save.setOnAction(value ->  {
-			String url = urlField.getText();
-
-			if(isValid(urlField.getText())) {
-				reader.setUrl(url);
-				dialog.close();
-				loadNew();
-			}
-		});
-
-		close.setOnAction(value ->  {
-			dialog.close();
-		});
-
-		HBox hb = new HBox(WHITE_SPACE / 2);
-		hb.getChildren().addAll(save, close);
-		dialogVbox.getChildren().addAll(label, urlField, hb);
-
-		return dialogVbox;
-	}
-
-	public static boolean isValid(String url){
-		try {
-			new URL(url).toURI();
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
+		SetFeedModal modal = new SetFeedModal(primaryStage, reader, this);
+		modal.show();
 	}
 
 	public void setPrimaryStage(Stage stage) {
